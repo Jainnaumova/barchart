@@ -10,14 +10,27 @@ export default class D3Chart {
         .attr('height', 500)
 
     d3.json(url).then(data => {
+      // implementing scaling bars by axios y
+      const y = d3.scaleLinear()
+        // the highest height
+        .domain([0, 272])
+        .range([0, 500])
+        // console.log(y(100)) // return aprox 183
+
+      // implementing scaling bars by axios x
+      const x = d3.scaleBand()
+        .domain(data.map(d => d.name))
+        .range([0, 800])
+        .padding(0.4)
+
       const rects = svg.selectAll('rect')
         .data(data)
 
       rects.enter().append('rect')
-        .attr('x', (d,i) => i * 100)
+        .attr('x', d => x(d.name)) // using scaling function x
         .attr('y', 0)
-        .attr('width', 50)
-        .attr('height', d => d.height)
+        .attr('width', x.bandwidth)
+        .attr('height', d => y(d.height)) // using scaling function y
         .attr('fill', 'grey')
     })
   }
