@@ -18,8 +18,10 @@ export default class D3Chart {
       // implementing scaling bars by axios y
       const y = d3.scaleLinear()
         // the highest height
-        .domain([0, d3.max(data, d => d.height)])
-        .range([0, HEIGHT])
+        .domain([
+          d3.min(data, d => d.height) * 0.95,
+          d3.max(data, d => d.height)])
+        .range([HEIGHT, 0])
         // console.log(y(100)) // return aprox 183
 
       // implementing scaling bars by axios x
@@ -41,9 +43,9 @@ export default class D3Chart {
 
       rects.enter().append('rect')
         .attr('x', d => x(d.name)) // using scaling function x
-        .attr('y', d => HEIGHT - y(d.height)) // start bars from bottom
+        .attr('y', d => y(d.height)) // start bars from bottom
         .attr('width', x.bandwidth)
-        .attr('height', d => y(d.height)) // using scaling function y
+        .attr('height', d => HEIGHT - y(d.height)) // using scaling function y
         .attr('fill', 'grey')
     })
   }
