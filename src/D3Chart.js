@@ -1,15 +1,18 @@
 import * as d3 from 'd3';
 
 const url = 'https://udemy-react-d3.firebaseio.com/tallest_men.json';
-const WIDTH = 800;
-const HEIGHT = 500;
+const MARGIN = { TOP: 10, BOTTOM: 50, LEFT: 50, RIGHT: 10 }
+const WIDTH = 800 - MARGIN.LEFT - MARGIN.RIGHT;
+const HEIGHT = 500 - MARGIN.TOP - MARGIN.BOTTOM;
 
 export default class D3Chart {
   constructor(element) {
     const svg = d3.select(element)
       .append('svg')
-        .attr('width', WIDTH)
-        .attr('height', HEIGHT)
+        .attr('width', WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
+        .attr('height', HEIGHT + MARGIN.TOP + MARGIN.BOTTOM)
+      .append('g') // append group
+        .attr('transform', `translate(${MARGIN.LEFT}, ${MARGIN.TOP})`)
 
     d3.json(url).then(data => {
       // implementing scaling bars by axios y
@@ -24,6 +27,14 @@ export default class D3Chart {
         .domain(data.map(d => d.name))
         .range([0, WIDTH])
         .padding(0.4)
+
+      const xAxisCall = d3.axisBottom(x);
+      svg.append('g') // append group
+        .attr('transform', `translate(0, ${HEIGHT})`) // move x axis to the bottom
+        .call(xAxisCall)
+
+      const yAxisCall = d3.axisLeft(y);
+      svg.append('g').call(yAxisCall) // append group
 
       const rects = svg.selectAll('rect')
         .data(data)
