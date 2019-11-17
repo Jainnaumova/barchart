@@ -1,6 +1,5 @@
 import * as d3 from 'd3';
 
-const url = 'https://udemy-react-d3.firebaseio.com/tallest_men.json';
 const MARGIN = { TOP: 10, BOTTOM: 50, LEFT: 70, RIGHT: 10 }
 const WIDTH = 800 - MARGIN.LEFT - MARGIN.RIGHT;
 const HEIGHT = 500 - MARGIN.TOP - MARGIN.BOTTOM;
@@ -37,15 +36,26 @@ export default class D3Chart {
 
     vis.yAxisGroup = vis.svg.append('g')
 
-    // fetch data and then call update method
-    d3.json(url).then(data => {
-      vis.data = data;
+    // fetch sets of data for switching
+    Promise.all([
+      d3.json('https://udemy-react-d3.firebaseio.com/tallest_men.json'),
+      d3.json('https://udemy-react-d3.firebaseio.com/tallest_women.json')
+    ]).then((datasets) => {
+      const [men, women] = datasets;
+      // to implement switching b/w men & women, initial - men
+      let flag = true
+
+      vis.data = men;
+      vis.update();
+
       // set interval in order to update visualization
       d3.interval(() => {
+        vis.data = flag ? men : women
         vis.update()
+        flag =! flag
       }, 1000)
-
     })
+
   }
 
   // update method
