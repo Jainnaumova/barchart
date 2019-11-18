@@ -77,20 +77,24 @@ export default class D3Chart {
 
     // recalculate X and Y axises in order to update
     const xAxisCall = d3.axisBottom(x);
-    vis.xAxisGroup.call(xAxisCall)
+    vis.xAxisGroup.transition().duration(500).call(xAxisCall)
 
     const yAxisCall = d3.axisLeft(y);
-    vis.yAxisGroup.call(yAxisCall);
+    vis.yAxisGroup.transition().duration(500).call(yAxisCall);
 
     // DATA JOIN tells d3 which array of data we want to associate with our data
     const rects = vis.svg.selectAll('rect')
       .data(vis.data)
 
     // EXIT remove elements that display on the screen but not exist in the new array of data
-    rects.exit().remove();
+    rects.exit()
+      .transition().duration(500)
+        .attr('height', '0')
+        .attr('y', HEIGHT)
+        .remove();
 
     // UPDATE data that exist in the new array and display on the screen
-    rects
+    rects.transition().duration(500)
       .attr('x', d => x(d.name)) // using scaling function x
       .attr('y', d => y(d.height)) // start bars from bottom
       .attr('width', x.bandwidth)
@@ -99,10 +103,12 @@ export default class D3Chart {
     // ENTER append attributes that does not exist in our data and on the screen
     rects.enter().append('rect')
       .attr('x', d => x(d.name)) // using scaling function x
-      .attr('y', d => y(d.height)) // start bars from bottom
       .attr('width', x.bandwidth)
-      .attr('height', d => HEIGHT - y(d.height)) // using scaling function y
       .attr('fill', 'grey')
+      .attr('y', HEIGHT) // bars raise from bottom to top
+      .transition().duration(500)
+        .attr('height', d => HEIGHT - y(d.height)) // using scaling function y
+        .attr('y', d => y(d.height)) // start bars from bottom
 
     console.log(rects)
   }
