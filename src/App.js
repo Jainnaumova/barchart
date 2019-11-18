@@ -27,7 +27,7 @@ class App extends Component {
           </Row>
           <Row>
             <Col xs={12}>
-              <ChartWrapper />
+              <ChartWrapper gender={this.state.gender}/>
             </Col>
           </Row>
         </Container>

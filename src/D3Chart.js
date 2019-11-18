@@ -16,7 +16,7 @@ export default class D3Chart {
         .attr('transform', `translate(${MARGIN.LEFT}, ${MARGIN.TOP})`)
 
     // x axios label
-    vis.svg.append('text')
+    vis.xLabel = vis.svg.append('text')
       .attr('x', WIDTH / 2)
       .attr('y', HEIGHT + 50)
       .attr('text-anchor', 'middle')
@@ -41,26 +41,21 @@ export default class D3Chart {
       d3.json('https://udemy-react-d3.firebaseio.com/tallest_men.json'),
       d3.json('https://udemy-react-d3.firebaseio.com/tallest_women.json')
     ]).then((datasets) => {
-      const [men, women] = datasets;
-      // to implement switching b/w men & women, initial - men
-      let flag = true
-
-      vis.data = men;
-      vis.update();
-
-      // set interval in order to update visualization
-      d3.interval(() => {
-        vis.data = flag ? men : women
-        vis.update()
-        flag =! flag
-      }, 1000)
+      vis.menData = datasets[0];
+      vis.womenData = datasets[1];
+      // to display first set of data
+      vis.update('men');
     })
 
   }
 
   // update method
-  update() {
+  update(gender) {
     const vis = this;
+
+    vis.data = (gender == 'men') ? vis.menData : vis.womenData;
+    vis.xLabel.text(`The world'\s tallest ${gender}`)
+
     // implementing scaling bars by axios y
     const y = d3.scaleLinear()
       .domain([
