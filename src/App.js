@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import Navbar from 'react-bootstrap/Navbar';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import ChartWrapper from './ChartWrapper';
-import GenderDropDown from './GenderDropDown';
+import React, { Component } from "react";
+import Navbar from "react-bootstrap/Navbar";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import ChartWrapper from "./ChartWrapper";
+import GenderDropDown from "./GenderDropDown";
 
 class App extends Component {
   state = {
-    gender: 'men'
-  }
+    gender: "men"
+  };
 
-  genderSelected = (gender) => this.setState({ gender })
+  genderSelected = gender => this.setState({ gender });
 
   render() {
     return (
@@ -22,12 +22,12 @@ class App extends Component {
         <Container>
           <Row>
             <Col xs={12}>
-              <GenderDropDown genderSelected={this.genderSelected}/>
+              <GenderDropDown genderSelected={this.genderSelected} />
             </Col>
           </Row>
           <Row>
             <Col xs={12}>
-              <ChartWrapper gender={this.state.gender}/>
+              <ChartWrapper gender={this.state.gender} />
             </Col>
           </Row>
         </Container>
